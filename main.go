@@ -20,6 +20,7 @@ func main() {
 	gFolder := ginter.Group("/folder")
 	{
 		gFolder.GET("/:name", handler.GetFolder)
+		gFolder.POST("/:name", handler.MkFolder)
 	}
 
 	ginter.Run(":9119")

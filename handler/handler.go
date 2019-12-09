@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -23,20 +24,53 @@ func init() {
 
 func GetFile(c *gin.Context) {
 	c.File(filepath.Join(BASEPATH, c.Param("name")))
+	return
 }
 
 func GetFolder(c *gin.Context) {
 	reqPath := c.Param("name")
 	fullPath := filepath.Join(BASEPATH, reqPath)
 
+	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+		c.String(400, fmt.Sprintf("filepath %s not exist", fullPath))
+		return
+	}
+
 	resp, err := getfolder(fullPath)
 	if err != nil {
 		c.String(500, err.Error())
+		return
 	}
 
 	c.JSON(200, resp)
+	return
 }
 
 func UploadFile(c *gin.Context) {
 	c.String(200, "upload file")
+	return
+}
+
+func MkFolder(c *gin.Context) {
+	fn := c.Param("name")
+	if fn == "" {
+		c.String(400, "no new folder name")
+		return
+	}
+
+	nowpath := c.PostForm("path")
+	if nowpath == "" {
+		c.String(400, "no now path")
+		return
+	}
+
+	fullpath := filepath.Join(BASEPATH, nowpath, fn)
+	err := os.Mkdir(fullpath, 0770)
+	if err != nil {
+		c.String(500, fmt.Sprintf("create folder: < %s > err => %s", fullpath, err))
+		return
+	}
+
+	c.String(200, "done")
+	return
 }
