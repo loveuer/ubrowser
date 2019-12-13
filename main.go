@@ -17,10 +17,13 @@ func main() {
 	{
 		gFiles.GET("/:name", handler.GetFile)
 		gFiles.DELETE("/:name", handler.DeleteFile)
+		gFiles.PUT("", handler.RenameFile)
+		gFiles.POST("", handler.UploadFile)
 	}
 	// 操作文件夹
 	gFolder := ginter.Group("/folder")
 	{
+		gFolder.GET("", handler.GetHome)
 		gFolder.GET("/:name", handler.GetFolder)
 		gFolder.POST("/:name", handler.MkFolder)
 	}

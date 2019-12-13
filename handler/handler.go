@@ -28,6 +28,17 @@ func GetFile(c *gin.Context) {
 }
 
 func DeleteFile(c *gin.Context) {
+	filename := c.Param("name")
+	if filename == "" {
+		c.String(400, "target name is empty")
+		return
+	}
+
+	err := os.Remove(filepath.Join(BASEPATH, filename))
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
 	c.String(200, "done")
 	return
 }
@@ -38,7 +49,33 @@ func UploadFile(c *gin.Context) {
 }
 
 func RenameFile(c *gin.Context) {
+	newname := c.PostForm("newname")
+	oldname := c.PostForm("oldname")
+	if newname == "" || oldname == "" {
+		c.String(400, "new(old)name is empty")
+		return
+	}
+
+	fmt.Printf("newname: %s\noldname: %s\n", newname, oldname)
+
+	err := os.Rename(filepath.Join(BASEPATH, oldname), filepath.Join(BASEPATH, newname))
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+
 	c.String(200, "done")
+	return
+}
+
+func GetHome(c *gin.Context) {
+	resp, err := getfolder(BASEPATH)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+
+	c.JSON(200, resp)
 	return
 }
 
