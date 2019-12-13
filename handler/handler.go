@@ -27,6 +27,21 @@ func GetFile(c *gin.Context) {
 	return
 }
 
+func DeleteFile(c *gin.Context) {
+	c.String(200, "done")
+	return
+}
+
+func UploadFile(c *gin.Context) {
+	c.String(200, "upload file")
+	return
+}
+
+func RenameFile(c *gin.Context) {
+	c.String(200, "done")
+	return
+}
+
 func GetFolder(c *gin.Context) {
 	reqPath := c.Param("name")
 	fullPath := filepath.Join(BASEPATH, reqPath)
@@ -43,11 +58,6 @@ func GetFolder(c *gin.Context) {
 	}
 
 	c.JSON(200, resp)
-	return
-}
-
-func UploadFile(c *gin.Context) {
-	c.String(200, "upload file")
 	return
 }
 
@@ -71,6 +81,11 @@ func MkFolder(c *gin.Context) {
 		return
 	}
 
+	c.String(200, "done")
+	return
+}
+
+func RenameFolder(c *gin.Context) {
 	c.String(200, "done")
 	return
 }
