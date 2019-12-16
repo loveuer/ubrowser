@@ -123,6 +123,19 @@ func MkFolder(c *gin.Context) {
 }
 
 func RenameFolder(c *gin.Context) {
+	oldname := c.Param("oldname")
+	newname := c.Param("newname")
+	if oldname == "" || newname == "" {
+		c.String(400, "empty old(new)name")
+		return
+	}
+
+	err := os.Rename(oldname, newname)
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+
 	c.String(200, "done")
 	return
 }
